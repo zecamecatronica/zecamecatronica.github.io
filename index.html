@@ -480,7 +480,7 @@ cout&lt;&lt;"Digite a cordenada X1"&lt;&lt;endl;
 cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 	cin&gt;&gt;y1;
 
-/* Comando que realiza a inversa de cores da região selecionada */
+/* Comando que realiza a inversão de cores da região selecionada */
   for(int i=x;i&lt;x1;i++){
     for(int j=y;j&lt;y1;j++){
 
@@ -488,6 +488,7 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
     }
   }
 
+/* A imagem é exibida ao final do processo */
 
   imshow("janela", image);
   waitKey();
@@ -499,13 +500,19 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 <p>Na primeira parte do código, a imagem é carregada. Em seguida, é solicitado ao usuário que informe as coordenadas da região que será alterada. Finalmente, é feita a alteração de cores da imagem.</p>
 </div>
 <div class="paragraph">
-<p>Abaixo é exibida a imagem com o resultado final.</p>
+<p>Abaixo é exibida a imagem original e em seguida a imagem alterada, com o resultado final.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="biel.png" alt="biel">
 </div>
-<div class="title">Figure 1. Imagem com efeito negativo</div>
+<div class="title">Figure 1. Imagem original</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="biel.png" alt="biel">
+</div>
+<div class="title">Figure 2. Imagem com efeito negativo</div>
 </div>
 </div>
 <div class="sect3">
@@ -579,7 +586,7 @@ int main(int argc, char** argv){
 <div class="content">
 <img src="troca.png" alt="troca">
 </div>
-<div class="title">Figure 2. Imagem em quebra cabeça</div>
+<div class="title">Figure 3. Imagem em quebra cabeça</div>
 </div>
 </div>
 </div>
@@ -588,7 +595,7 @@ int main(int argc, char** argv){
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 19:35:41 -03
+Last updated 2017-09-13 19:49:42 -03
 </div>
 </div>
 </body>

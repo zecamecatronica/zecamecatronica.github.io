@@ -445,17 +445,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
 </div>
-<div class="sidebarblock">
-<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>#include &lt;iostream&gt;
+<pre class="highlight"><code>/* inicialização do programa */
+#include &lt;iostream&gt;
 #include &lt;opencv2/opencv.hpp&gt;
 
 using namespace cv;
 using namespace std;
 
 int main(int, char**){
+/* Declaração e carregamento da imagem*/
   Mat image;
   Vec3b val;
 	int x, y,x1,y1;
@@ -468,7 +468,7 @@ int main(int, char**){
 	int rows = image.rows;
 	int cols = image.cols;
 
-
+/* Solicita-se ao usuario que informe a região que sera alterada */
 cout&lt;&lt;"Digite a cordenada X entre 0 e "&lt;&lt; rows-1&lt;&lt;endl;
 	cin&gt;&gt;x;
 cout&lt;&lt;"Digite a cordenada Y entre 0 e "&lt;&lt;cols-1&lt;&lt;endl;
@@ -478,6 +478,7 @@ cout&lt;&lt;"Digite a cordenada X1"&lt;&lt;endl;
 cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 	cin&gt;&gt;y1;
 
+/* Comando que realiza a inversa de cores da região selecionada */
   for(int i=x;i&lt;x1;i++){
     for(int j=y;j&lt;y1;j++){
 
@@ -492,7 +493,8 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 }</code></pre>
 </div>
 </div>
-</div>
+<div class="paragraph">
+<p>Na primeira parte do código, a imagem é carregada. Em seguida, é solicitado ao usuário que informe as coordenadas da região que será alterada. Finalmente, é feita a alteração de cores da imagem.</p>
 </div>
 </div>
 </div>
@@ -500,7 +502,7 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 18:15:43 -03
+Last updated 2017-09-13 18:30:26 -03
 </div>
 </div>
 </body>

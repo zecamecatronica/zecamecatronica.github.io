@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.6.1">
-<meta name="author" content="Gabriel Lucena Bezerra da Nóbrega - gabrielpu7igb@gmail.com / José Carlos Barbosa Junior - jcbj_21@hotmail.com">
+<meta name="author" content="Gabriel Lucena Bezerra da Nóbrega &amp;amp;lt;gabrielpu7igb@gmail.com&amp;amp;gt; / José Carlos Barbosa Junior &amp;amp;lt;jcbj_21@hotmail.com&amp;amp;gt;">
 <title>Processamento Digital de Imagens</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -430,18 +430,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Processamento Digital de Imagens</h1>
 <div class="details">
-<span id="author" class="author">Gabriel Lucena Bezerra da Nóbrega - gabrielpu7igb@gmail.com / José Carlos Barbosa Junior - jcbj_21@hotmail.com</span><br>
+<span id="author" class="author">Gabriel Lucena Bezerra da Nóbrega &amp;amp;lt;gabrielpu7igb@gmail.com&amp;amp;gt; / José Carlos Barbosa Junior &amp;amp;lt;jcbj_21@hotmail.com&amp;amp;gt;</span><br>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>An introduction to
-<a href="http://asciidoc.org">AsciiDoc</a>.</p>
-</div>
-</div>
-</div>
 <div class="sect1">
 <h2 id="_strong_unidade_1_strong"><strong>Unidade 1</strong></h2>
 <div class="sectionbody">
@@ -451,46 +443,72 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_exercícios_seção_2_manipulando_pixels_em_uma_imagem">Exercícios Seção 2. Manipulando pixels em uma imagem</h2>
 <div class="sectionbody">
-<div class="listingblock">
+<div class="paragraph">
+<p>O objetivo dessa atividade é selecionar uma área dentro da imagem e alterar as cores desta região de modo que se obtenha o efeito de negativo da imagem.</p>
+</div>
+<div class="paragraph">
+<p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
+</div>
+<div class="sidebarblock">
 <div class="content">
-<pre>#include &lt;iostream&gt;
-#include &lt;opencv2/opencv.hpp&gt;
-
-using namespace cv;
-using namespace std;
-
-int main(int, char**){
+<div class="paragraph">
+<p>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;</p>
+</div>
+<div class="paragraph">
+<p>using namespace cv;
+using namespace std;</p>
+</div>
+<div class="paragraph">
+<p>int main(int, char**){
   Mat image;
   Vec3b val;
 	int x, y,x1,y1;
   image= imread("biel.png",CV_LOAD_IMAGE_GRAYSCALE);
   if(!image.data)
-    cout &lt;&lt; "nao abriu bolhas.png" &lt;&lt; endl;
-
-  namedWindow("janela",WINDOW_AUTOSIZE);
-
-	int rows = image.rows;
-	int cols = image.cols;
-
-
-cout&lt;&lt;"Digite a cordenada X entre 0 e "&lt;&lt; rows-1&lt;&lt;endl;
-	cin&gt;&gt;x;
-cout&lt;&lt;"Digite a cordenada Y entre 0 e "&lt;&lt;cols-1&lt;&lt;endl;
-	cin&gt;&gt;y;
-cout&lt;&lt;"Digite a cordenada X1"&lt;&lt;endl;
-	cin&gt;&gt;x1;
-cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
-	cin&gt;&gt;y1;
-
-  for(int i=x;i&lt;x1;i++){
-    for(int j=y;j&lt;y1;j++){
-
-		image.at&lt;uchar&gt;(i,j)=255-image.at&lt;uchar&gt;(i,j);
-    }
+    cout &lt;&lt; "nao abriu bolhas.png" &lt;&lt; endl;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>namedWindow("janela",WINDOW_AUTOSIZE);</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>int rows = image.rows;
+int cols = image.cols;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>cout&lt;&lt;"Digite a cordenada X entre 0 e "&lt;&lt; rows-1<a href="#endl;
+	cin">[endl;
+	cin]</a>x;
+cout&lt;&lt;"Digite a cordenada Y entre 0 e "<a href="#cols-1&lt;&lt;endl;
+	cin">[cols-1&lt;&lt;endl;
+	cin]</a>y;
+cout&lt;&lt;"Digite a cordenada X1"<a href="#endl;
+	cin">[endl;
+	cin]</a>x1;
+cout&lt;&lt;"Digite a cordenada Y1"<a href="#endl;
+	cin">[endl;
+	cin]</a>y1;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>for(int i=x;i&lt;x1;i++){
+  for(int j=y;j&lt;y1;j++){</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>image.at&lt;uchar&gt;(i,j)=255-image.at&lt;uchar&gt;(i,j);
   }
-
-
-  imshow("janela", image);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>  imshow("janela", image);
   waitKey();
   return 0;
 }</pre>
@@ -499,9 +517,11 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 </div>
 </div>
 </div>
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 17:51:03 -03
+Last updated 2017-09-13 18:07:20 -03
 </div>
 </div>
 </body>

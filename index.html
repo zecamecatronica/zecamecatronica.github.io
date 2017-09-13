@@ -439,6 +439,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_exercícios_seção_2_manipulando_pixels_em_uma_imagem">Exercícios Seção 2. Manipulando pixels em uma imagem</h3>
+<div class="sect3">
+<h4 id="_exercício_2_1">Exercício 2.1</h4>
 <div class="paragraph">
 <p>O objetivo dessa atividade é selecionar uma área dentro da imagem e alterar as cores desta região de modo que se obtenha o efeito de negativo da imagem.</p>
 </div>
@@ -455,7 +457,7 @@ using namespace cv;
 using namespace std;
 
 int main(int, char**){
-/* Declaração e carregamento da imagem*/
+/* Declaração e carregamento da imagem */
   Mat image;
   Vec3b val;
 	int x, y,x1,y1;
@@ -503,7 +505,82 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 <div class="content">
 <img src="biel.png" alt="biel">
 </div>
-<div class="title">Figure 1. Imagem final</div>
+<div class="title">Figure 1. Imagem com efeito negativo</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exercício_2_2">Exercício 2.2</h4>
+<div class="paragraph">
+<p>O objetivo desse exercício é elaborar um quebra cabeça que irá dividir a imagem em 4 partes e alternar as suas posições em diagonal.</p>
+</div>
+<div class="paragraph">
+<p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* inicialização do programa */
+#include &lt;iostream&gt;
+#include &lt;cv.h&gt;
+#include &lt;highgui.h&gt;
+
+using namespace cv;
+using namespace std;
+
+int largura, altura, aux;
+
+int main(int argc, char** argv){
+
+/* Declaração e carregamento da imagem */
+
+    Mat imagem;
+    imagem = imread("biel.png", CV_LOAD_IMAGE_GRAYSCALE);
+
+    if(!imagem.data){
+        cout &lt;&lt; "Não foi possível carregar a imagem" &lt;&lt;endl;
+    }
+
+/* Calculo do tamanho da imagem */
+
+    largura=imagem.size().width;
+	altura=imagem.size().height;
+
+  //  cout &lt;&lt; row &lt;&lt; " " &lt;&lt; col;
+
+/* Através do uso de variável auxiliar, uma região da imagem é salva em uma variável e tem sua posição trocada com outra região armazenada em outra variável */
+
+    for(int i=0; i &lt; largura-1; i++){
+        for(int j=0; j&lt;altura-1; j++){
+            if(i &lt; ((largura/2)) &amp;&amp;  j &lt; (altura/2)){
+                aux = imagem.at&lt;uchar&gt;(i,j);
+                imagem.at&lt;uchar&gt;(i,j) = imagem.at&lt;uchar&gt;((largura/2)+i,(altura/2)+j);
+                imagem.at&lt;uchar&gt;((largura/2)+i,(altura/2)+j) = aux;
+            }
+            else if(i &gt;= (largura/2)  &amp;&amp; j &gt;= (altura/2)){
+                aux = imagem.at&lt;uchar&gt;(i - (largura/2), j);
+                imagem.at&lt;uchar&gt;(i - (largura/2), j) = imagem.at&lt;uchar&gt;(i, j-(altura/2));
+                imagem.at&lt;uchar&gt;(i, j - (altura/2))= aux;
+             }
+        }
+    }
+
+/* A imagem é exibida ao final do processo */
+
+    imshow("janela", imagem);
+	imwrite("troca.png",imagem);
+    waitKey();
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Abaixo é exibida a imagem com o resultado final.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="troca.png" alt="troca">
+</div>
+<div class="title">Figure 2. Imagem em quebra cabeça</div>
+</div>
 </div>
 </div>
 </div>
@@ -511,7 +588,7 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 19:11:22 -03
+Last updated 2017-09-13 19:35:41 -03
 </div>
 </div>
 </body>

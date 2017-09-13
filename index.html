@@ -461,12 +461,75 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-ruby" data-lang="ruby">Puts "Hello World!!"</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;</p>
+</div>
+<div class="paragraph">
+<p>using namespace cv;
+using namespace std;</p>
+</div>
+<div class="paragraph">
+<p>int main(int, char**){
+  Mat image;
+  Vec3b val;
+	int x, y,x1,y1;
+  image= imread("biel.png",CV_LOAD_IMAGE_GRAYSCALE);
+  if(!image.data)
+    cout &lt;&lt; "nao abriu bolhas.png" &lt;&lt; endl;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>namedWindow("janela",WINDOW_AUTOSIZE);</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>int rows = image.rows;
+int cols = image.cols;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>cout&lt;&lt;"Digite a cordenada X entre 0 e "&lt;&lt; rows-1<a href="#endl;
+	cin">[endl;
+	cin]</a>x;
+cout&lt;&lt;"Digite a cordenada Y entre 0 e "<a href="#cols-1&lt;&lt;endl;
+	cin">[cols-1&lt;&lt;endl;
+	cin]</a>y;
+cout&lt;&lt;"Digite a cordenada X1"<a href="#endl;
+	cin">[endl;
+	cin]</a>x1;
+cout&lt;&lt;"Digite a cordenada Y1"<a href="#endl;
+	cin">[endl;
+	cin]</a>y1;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>for(int i=x;i&lt;x1;i++){
+  for(int j=y;j&lt;y1;j++){</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>image.at&lt;uchar&gt;(i,j)=255-image.at&lt;uchar&gt;(i,j);
+  }
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>  imshow("janela", image);
+  waitKey();
+  return 0;
+}</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 14:48:58 -03
+Last updated 2017-09-13 17:22:51 -03
 </div>
 </div>
 </body>

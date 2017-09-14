@@ -510,7 +510,7 @@ cout&lt;&lt;"Digite a cordenada Y1"&lt;&lt;endl;
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="biel.png" alt="biel">
+<img src="Negativo.png" alt="Negativo">
 </div>
 <div class="title">Figure 2. Imagem com efeito negativo</div>
 </div>
@@ -590,12 +590,158 @@ int main(int argc, char** argv){
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_exercícios_seção_3_preenchendo_regiões">Exercícios Seção 3. Preenchendo regiões</h3>
+<div class="sect3">
+<h4 id="_exercício_3_1">Exercício 3.1</h4>
+<div class="paragraph">
+<p>O objetivo dessa atividade é observar e propor uma solução para casos onde o programa labeling.cpp pode ter sua execução comprometida.
+O programa labeling.cpp realiza a varredura de uma imagem em tons de cinza e faz uma contagem de elementos presentes na imagem. Como a escala de cinza varia de 0 a 255, caso hajam mais de 255 elementos na imagem, não seria possível rotular novos elementos.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exercício_3_2">Exercício 3.2</h4>
+<div class="paragraph">
+<p>O objetivo dessa atividade é contar quantos elementos estão presentes na imagem e contar também quantos elementos possuem furo.</p>
+</div>
+<div class="paragraph">
+<p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv){
+  Mat imagem, mask;
+  int largura, altura;
+  int numerobjts;
+
+  CvPoint p;
+  imagem = imread("bolhas.png",CV_LOAD_IMAGE_GRAYSCALE);
+
+  if(!imagem.data){
+    std::cout &lt;&lt; "imagem nao carregou corretamente\n";
+    return(-1);
+  }
+
+	largura = imagem.rows;
+	altura = imagem.cols;
+
+  p.x=0;
+  p.y=0;
+
+  /* Identificar as Bordas */
+  numerobjts=0;
+  for(int i=0; i&lt;largura; i++){
+    for(int j=0; j&lt;altura; j++){
+		if (j == 0 || j == (largura-1) || i == 0 || i == (altura-1)){
+		  if(imagem.at&lt;uchar&gt;(i,j) == 255){
+			p.x=j;
+			p.y=i;
+			floodFill(imagem,p,numerobjts);
+		  }
+		}
+	}
+  }
+/* Modificar a Cor de Fundo */
+floodFill (imagem, Point(0,0), 10);
+
+int numeroburaco =0, semburaco = 0;
+
+for(int i=0; i&lt;largura; i++)
+{
+    for(int j=0; j&lt;altura; j++)
+	{
+
+		p.x=j;
+		p.y=i;
+
+		/* Contar numero de buracos */
+		if(imagem.at&lt;uchar&gt;(i,j) == 0)
+		{
+			numeroburaco++;
+
+			floodFill(imagem,p,20);
+				/* Se tiver buraco modifica a cor */
+				if(imagem.at&lt;uchar&gt;(i,j-1) == 255 )
+				{
+				p.x=j-1;
+				p.y=i;
+				floodFill(imagem,p,100);
+		  		}
+		}
+
+	}
+  }
+for(int i=0; i&lt;largura; i++)
+{
+    for(int j=0; j&lt;altura; j++)
+	{
+		p.x=j;
+		p.y=i;
+		/* Contar numero de objetos sem buracos */
+		if(imagem.at&lt;uchar&gt;(i,j) == 255)
+		{
+			semburaco++;
+			floodFill(imagem,p,222);
+		}
+	}
+}
+
+
+cout &lt;&lt; "Existe " &lt;&lt; numeroburaco &lt;&lt;" objetos com buraco";
+cout &lt;&lt; " e "&lt;&lt; semburaco &lt;&lt; " sem buraco" &lt;&lt; endl;
+
+  imshow("labeling", imagem);
+  imwrite("bolhascontadas.png", imagem);
+  waitKey();
+  return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A imagem utilizada foi a imagem abaixo:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="bolhas.png" alt="bolhas">
+</div>
+<div class="title">Figure 4. Imagem bolhas</div>
+</div>
+<div class="paragraph">
+<p>Para realizar a atividade, foi necessário identificar as bordas e eliminar os elementos que as tocam, pois não seria possível identificar com exatidão se estes elementos possuem furo ou não.</p>
+</div>
+<div class="paragraph">
+<p>Como resultado, o programa exibe a imagem com os elementos restantes identificando, por meio de diferentes tons, os elementos que possuem furo e os que não possuem. Ao exibir a imagem, uma mensagem é exibida no terminal contendo informações sobre os elementos.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="bolhascontadas.png" alt="bolhascontadas">
+</div>
+<div class="title">Figure 5. Imagem bolhas contadas</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="resultadobolhas.png" alt="resultadobolhas">
+</div>
+<div class="title">Figure 6. Imagem terminal com informações</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exercícios_seção_4_manipulação_de_histogramas">Exercícios Seção 4. Manipulação de histogramas</h3>
+
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 19:49:42 -03
+Last updated 2017-09-13 23:42:44 -03
 </div>
 </div>
 </body>

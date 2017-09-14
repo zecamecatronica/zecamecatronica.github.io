@@ -734,14 +734,136 @@ cout &lt;&lt; " e "&lt;&lt; semburaco &lt;&lt; " sem buraco" &lt;&lt; endl;
 </div>
 <div class="sect2">
 <h3 id="_exercícios_seção_4_manipulação_de_histogramas">Exercícios Seção 4. Manipulação de histogramas</h3>
+<div class="sect3">
+<h4 id="_exercício_4_1">Exercício 4.1</h4>
+<div class="paragraph">
+<p>O objetivo dessa atividade é inicializar a camera, capturar imagens e realizar a equalização de um histograma em tons de cinza.</p>
+</div>
+<div class="paragraph">
+<p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv)
+{
+  Mat image;
+  Mat equalize;
+  Mat imageGray;
+
+	int width, height;
+
+
+	VideoCapture cap;
+
+  vector&lt;Mat&gt; planes;
+  Mat histR, histG, histB;
+
+  int nbins = 64;
+
+  float range[] = {0, 256};
+  const float *histrange = { range };
+  bool uniform = true;
+  bool acummulate = false;
+
+/* Inicia a camera */
+  cap.open(0);
+
+  if(!cap.isOpened()){
+    cout &lt;&lt; "cameras indisponiveis";
+    return -1;
+  }
+
+  width  = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+  height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+  cout &lt;&lt; "largura = " &lt;&lt; width &lt;&lt; endl;
+  cout &lt;&lt; "altura  = " &lt;&lt; height &lt;&lt; endl;
+
+/* Define o histograma */
+  int histw = nbins, histh = nbins/2;
+
+  Mat histImgR(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgG(histh, histw, CV_8UC3, Scalar(0,0,0));
+  Mat histImgB(histh, histw, CV_8UC3, Scalar(0,0,0));
+
+  while(1){
+    cap &gt;&gt; image;
+    split (image, planes);
+
+    calcHist(&amp;planes[0], 1, 0, Mat(), histR, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    calcHist(&amp;planes[1], 1, 0, Mat(), histG, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+    calcHist(&amp;planes[2], 1, 0, Mat(), histB, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, acummulate);
+
+/* Realiza a normalização */
+    normalize(histR, histR, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+    normalize(histG, histB, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+    normalize(histB, histB, 0, histImgR.rows, NORM_MINMAX, -1, Mat());
+
+
+    histImgR.setTo(Scalar(0));
+    histImgG.setTo(Scalar(0));
+    histImgB.setTo(Scalar(0));
+
+
+    for(int i=0; i&lt;nbins; i++){
+      line(histImgR, Point(i, histh),
+           Point(i, cvRound(histR.at&lt;float&gt;(i))),
+           Scalar(0, 0, 255), 1, 8, 0);
+      line(histImgG, Point(i, histh),
+           Point(i, cvRound(histG.at&lt;float&gt;(i))),
+           Scalar(0, 255, 0), 1, 8, 0);
+      line(histImgB, Point(i, histh),
+           Point(i, cvRound(histB.at&lt;float&gt;(i))),
+           Scalar(255, 0, 0), 1, 8, 0);
+    }
+    histImgR.copyTo(image(Rect(0, 0       ,nbins, histh)));
+    histImgG.copyTo(image(Rect(0, histh   ,nbins, histh)));
+    histImgB.copyTo(image(Rect(0, 2*histh ,nbins, histh)));
+    imshow("image", image);
+
+
+    cvtColor(image, imageGray, CV_BGR2GRAY);
+
+    equalizeHist(imageGray, equalize);
+
+    imshow("Equalized Gray Image", equalize);
+	imwrite("equalize.png", equalize);
+
+    if(waitKey(15) &gt;= 0) break;
+  }
+  return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O resultado do programa pode ser verificado na imagem abaixo.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="equalize.png" alt="equalize">
+</div>
+<div class="title">Figure 7. Imagem histograma</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-13 23:42:44 -03
+Last updated 2017-09-14 00:23:12 -03
 </div>
 </div>
 </body>

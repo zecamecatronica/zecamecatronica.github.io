@@ -983,12 +983,241 @@ int main(int argc, char const *argv[]) {
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_exercícios_seção_7_filtragem_no_domínio_da_frequência">Exercícios Seção 7. Filtragem no domínio da frequência</h3>
+<div class="paragraph">
+<p>O objetivo dest atividade é implementar um filtro homomórfico. Um filtro utilizado para corrigir iluminação em imagens com baixa visibilidade e que contem parâmetros ajustáveis para melhor se adaptar a cada situação.</p>
+</div>
+<div class="paragraph">
+<p>Segue abaixo o código completo utilizado para realizar a atividade:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+#include &lt;math.h&gt;
+
+using namespace cv;
+using namespace std;
+
+int height;
+
+int dft_M, dft_N;
+
+float MAX = 100.0;
+float gl = 0;
+float max_gl = 100;
+int gl_slider = 0;
+
+int d0_slider = 0;
+float max_d0 = 256;
+float d0 = 0;
+
+float gh = 0;
+float max_gh = 100;
+int gh_slider = 0;
+
+float c = 0;
+float max_c = 100;
+int c_slider = 0;
+
+
+Mat image, imageDft, padded;
+
+char TrackbarName[50];
+
+// troca os quadrantes da imagem da DFT
+void deslocaDFT(Mat&amp; image )
+{
+    Mat aux, A, B, C, D;
+
+    // se for impar recorta para nao ter imagens desiguais
+    image = image(Rect(0, 0, image.cols &amp; -2, image.rows &amp; -2));
+    int cx = image.cols/2;
+    int cy = image.rows/2;
+
+    // reorganiza os quadrantes
+    A = image(Rect(0, 0, cx, cy));
+    B = image(Rect(cx, 0, cx, cy));
+    C = image(Rect(0, cy, cx, cy));
+    D = image(Rect(cx, cy, cx, cy));
+
+    // A &lt;-&gt; D
+    A.copyTo(aux);  D.copyTo(A);  aux.copyTo(D);
+
+    // C &lt;-&gt; B
+    C.copyTo(aux);  B.copyTo(C);  aux.copyTo(B);
+}
+
+void calcFiltroHomomorfico()
+{
+    Mat filter = Mat(padded.size(), CV_32FC2, Scalar(0));
+    Mat aux = Mat(dft_M, dft_N, CV_32F);
+
+    for (int i = 0; i &lt; dft_M; i++)
+	{
+        for (int j = 0; j &lt; dft_N; j++)
+		{
+            float d2 = pow(i - dft_M/2.0, 2) + pow(j - dft_N/2.0, 2);
+            float exp = -c * (d2/pow(d0, 2));
+            float valor = (gh - gl)*(1 - expf(exp) ) + gl;
+            aux.at&lt;float&gt; (i,j) = valor;
+        }
+    }
+
+    Mat comps[] = {aux, aux};
+    merge(comps, 2, filter);
+
+    Mat dftClone = imageDft.clone();
+
+    mulSpectrums(dftClone,filter,dftClone,0);
+
+    deslocaDFT(dftClone);
+
+    idft(dftClone, dftClone);
+
+    vector&lt;Mat&gt; planos;
+
+    split (dftClone, planos);
+
+    normalize(planos[0], planos[0], 0, 1, CV_MINMAX);
+
+    char bufferd0[20], bufferyh[20], bufferyl[20];
+    sprintf(bufferd0, "D0: %f", d0);
+    sprintf(bufferyh, "GH: %f", gh);
+    sprintf(bufferyl, "GL: %f", gl);
+	sprintf(bufferyl, "c: %f", c);
+    putText(planos[0], bufferd0,cv::Point(0,10), CV_FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(255),1,8,false);
+    putText(planos[0], bufferyh,cv::Point(0,20), CV_FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(255),1,8,false);
+    putText(planos[0], bufferyl,cv::Point(0,30), CV_FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(255),1,8,false);
+	putText(planos[0], bufferyl,cv::Point(0,40), CV_FONT_HERSHEY_SIMPLEX, 0.35, cv::Scalar(255),1,8,false);
+    imshow("Filtro Homomorfico", planos[0]);
+
+    imshow("Original", image);
+	imwrite("ResultadoHomomorfico.png", planos[0]);
+}
+
+void on_trackbar_gl(int, void*)
+{
+    gl = (float) gl_slider;
+    gl = max_gl*gl/MAX;
+    calcFiltroHomomorfico();
+}
+
+ // Declaração de parâmetros ajustáveis
+void on_trackbar_d0(int, void *)
+{
+    d0 = d0_slider*max_d0/MAX;
+    calcFiltroHomomorfico();
+}
+
+void on_trackbar_gh(int, void*)
+{
+    gh = gh_slider*max_gh/MAX;
+    calcFiltroHomomorfico();
+}
+void on_trackbar_c(int, void*)
+{
+  c = c_slider*max_c/MAX;
+  calcFiltroHomomorfico();
+}
+
+int main(int argvc, char** argv)
+{
+	//Imagem que deseja Filtrar
+	image = imread("Detectou.png");
+    cvtColor(image, image, CV_BGR2GRAY);
+
+    height = image.size().height;
+
+    // identifica os tamanhos otimos para o calculo do FFT
+    dft_M = getOptimalDFTSize(image.rows);
+    dft_N = getOptimalDFTSize(image.cols);
+
+    // realiza o padding da imagem
+    Mat_&lt;float&gt; zeros;
+    copyMakeBorder(image, padded, 0,
+                   dft_M - image.rows, 0,
+                   dft_N - image.cols,
+                   BORDER_CONSTANT, Scalar::all(0));
+
+    // parte imaginaria da matriz complexa (preenchida com zeros)
+    zeros = Mat_&lt;float&gt;::zeros(padded.size());
+
+    // prepara a matriz complexa para ser preenchida
+    imageDft = Mat(padded.size(), CV_32FC2, Scalar(0));
+
+    copyMakeBorder(image, padded, 0,
+                   dft_M - image.rows, 0,
+                   dft_N - image.cols,
+                   BORDER_CONSTANT, Scalar::all(0));
+
+    Mat_&lt;float&gt; realInput = Mat_&lt;float&gt;(padded);
+
+    vector&lt;Mat&gt; planos;
+    planos.push_back(realInput);
+    planos.push_back(zeros);
+
+    merge(planos, imageDft);
+
+    dft(imageDft, imageDft);
+    deslocaDFT(imageDft);
+
+    namedWindow("Filtro Homomorfico", 1);
+
+    sprintf( TrackbarName, "gH");
+    createTrackbar( TrackbarName, "Filtro Homomorfico",
+                    &amp;gh_slider,
+                    MAX,
+                    on_trackbar_gh);
+
+    sprintf( TrackbarName, "gL");
+    createTrackbar( TrackbarName, "Filtro Homomorfico",
+                    &amp;gl_slider,
+                    MAX,
+                    on_trackbar_gl);
+
+    sprintf( TrackbarName, "D0");
+    createTrackbar( TrackbarName, "Filtro Homomorfico",
+                    &amp;d0_slider,
+                    MAX,
+                    on_trackbar_d0 );
+	sprintf( TrackbarName, "c");
+    createTrackbar( TrackbarName, "Filtro Homomorfico",
+                    &amp;c_slider,
+                    MAX,
+                    on_trackbar_c);
+
+    calcFiltroHomomorfico();
+    waitKey(0);
+
+
+	return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O resultado do programa é exibido abaixo:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="Detectou.png" alt="Detectou">
+</div>
+<div class="title">Figure 10. Imagem original</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="Homomorfico.png" alt="Homomorfico">
+</div>
+<div class="title">Figure 11. Imagem após filtro</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-14 01:20:07 -03
+Last updated 2017-10-14 11:33:15 -03
 </div>
 </div>
 </body>
